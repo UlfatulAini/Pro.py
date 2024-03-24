@@ -55,11 +55,14 @@ def seluruh_pasien():
     else:
         print('\nDaftar Pasien:')
         print('==============')
-        headers_data = ['No','ID Pasien','Nama','Jenis Kelamin','Usia','Poli']
-        data = [[i+1, p['id_pasien'], p['nama'], p['jenis_kelamin'], p['usia'], p['poli']]
-                for i, p in enumerate(pasien)]
+        headers_data = ['No', 'ID Pasien', 'Nama', 'Jenis Kelamin', 'Usia', 'Poli']
+        data = []
+        nomor = 1
+        for p in pasien:
+            data.append([nomor, p['id_pasien'], p['nama'], p['jenis_kelamin'], p['usia'], p['poli']])
+            nomor += 1
         print(tabulate(data, headers=headers_data, tablefmt='grid'))
-    
+        
     submenu_daftar_pasien()
 
 def pasien_dicari():
@@ -74,11 +77,12 @@ def pasien_dicari():
     if not pasien_ditemukan:
        print(f"\nTidak ada pasien yang ditemukan dengan id '{kriteria}'.")
     else:
-       print(f"Pasien yang ditemukan dengan id pasien '{kriteria}':")
-       headers = ['ID Pasien', 'Nama', 'Jenis Kelamin', 'Usia', 'Poli']
-       data = [[p['id_pasien'], p['nama'], p['jenis_kelamin'], p['usia'], p['poli']] 
-       for i, p in enumerate(pasien_ditemukan)]
-       print(tabulate(data, headers=headers, tablefmt='grid'))
+        print(f"Pasien yang ditemukan dengan id pasien '{kriteria}':") 
+        headers = ['ID Pasien', 'Nama', 'Jenis Kelamin', 'Usia', 'Poli']
+        data = []
+        for p in pasien_ditemukan:
+            data.append([p['id_pasien'], p['nama'], p['jenis_kelamin'], p['usia'], p['poli']])
+        print(tabulate(data, headers=headers, tablefmt='grid'))
 
     submenu_daftar_pasien()
 
@@ -105,26 +109,34 @@ def tambah_pasien():
     print('\nTambah Pasien Baru')
     print('====================')
     id_pasien = input('Masukkan ID Pasien: ').strip().title()
+    while len(id_pasien) != 7:
+        print('ID Pasien harus terdiri dari 7 karakter.')
+        id_pasien = input('Masukkan ID Pasien: ').strip().title()
 
-    #validasi apakah id pasien sudah ada
     if any(p['id_pasien'] == id_pasien for p in pasien):
         print(f'ID Pasien {id_pasien} sudah ada. Silahkan gunakan ID yang berbeda.')
         submenu_tambah_pasien()
         return
-    nama = input('Masukkan nama pasien: ').strip().title()
-    jenis_kelamin = input('Masukkan jenis kelamin pasien L/P ("L" untuk Laki-laki dan "P" untuk Perempuan): ').strip().upper()
-    usia = input('Masukkan usia pasien: ')
-    poli = input('masukkan poli untuk pasien: ').strip().title()
 
-    #validasi input jenis kelamin
-    while jenis_kelamin not in ['L','P']:
+    nama = input('Masukkan nama pasien: ').strip().title()
+    while len(nama) > 55:
+        print('Nama pasien tidak boleh lebih dari 55 karakter.')
+        nama = input('Masukkan nama pasien: ').strip().title()
+
+    jenis_kelamin = input('Masukkan jenis kelamin pasien L/P ("L" untuk Laki-laki dan "P" untuk Perempuan): ').strip().upper()
+    while jenis_kelamin not in ['L', 'P']:
         print('Jenis kelamin harus "L" (laki-laki) atau "P" (Perempuan).')
         jenis_kelamin = input('Masukkan jenis kelamin pasien L/P ("L" untuk Laki-laki dan "P" untuk Perempuan): ').strip().upper()
 
-    #validasi input usia
-    while not usia.isdigit():
-        print('Usia harus berupa angka')
+    usia = input('Masukkan usia pasien: ')
+    while not usia.isdigit() or len(usia) > 3 or int(usia) < 0:
+        print('Usia harus berupa angka maksimal 3 digit dan tidak boleh negatif.')
         usia = input('Masukkan usia pasien: ')
+
+    poli = input('Masukkan poli untuk pasien: ').strip().title()
+    while len(poli) > 25:
+        print('Nama poli tidak boleh lebih dari 25 karakter.')
+        poli = input('Masukkan poli untuk pasien: ').strip().title()
 
     #menunjukkan data pasien yang akan disimpan
     print('\nData pasien yang akan disimpan: ')
@@ -189,7 +201,7 @@ def perbarui_pasien():
         if konfirmasi == 'ya':
             kolom_diubah = False
             while not kolom_diubah:
-                pilihan = input('\nPilihan kolom yang ingin diubah (ID Pasien, Nama, Jenis Kelamin, Usia, Poli) dan "selesai" untuk selesai: ')
+                pilihan = input('\nPilihan kolom yang ingin diubah (ID Pasien, Nama, Jenis Kelamin, Usia, Poli) dan "selesai" untuk selesai: ').strip().lower()
                 
                 if pilihan == 'id pasien':
                     id_pasien_baru = input(f'Masukkan ID pasien baru untuk {id_pasien}: ').strip().title()
@@ -322,8 +334,11 @@ def cari_pasien():
     else:
         print(f"Pasien yang ditemukan dengan nama '{kriteria}':")
         headers_data = ['No', 'Id Pasien', 'Nama', 'Jenis Kelamin', 'Usia', 'Poli']
-        data = [[i+1, p['id_pasien'], p['nama'], p['jenis_kelamin'], p['usia'], p['poli']] 
-        for i, p in enumerate(pasien_ditemukan)]
+        data = []
+        nomor = 1
+        for p in pasien_ditemukan:
+            data.append([nomor, p['id_pasien'], p['nama'], p['jenis_kelamin'], p['usia'], p['poli']])
+            nomor += 1
         print(tabulate(data, headers=headers_data, tablefmt='grid'))
     
     submenu_cari_pasien()
