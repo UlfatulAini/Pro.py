@@ -226,7 +226,7 @@ def perbarui_pasien():
                     pasien_ditemukan['usia'] = usia_baru
                     kolom_diubah = True
                 elif pilihan == 'poli':
-                    poli_baru = input(f"Masukkan Poli bau untuk {pasien_ditemukan['nama']}: ").strip().title()
+                    poli_baru = input(f"Masukkan Poli baru untuk {pasien_ditemukan['nama']}: ").strip().title()
                     pasien_ditemukan['poli'] = poli_baru
                     kolom_diubah = True
                 elif pilihan == 'selesai':
